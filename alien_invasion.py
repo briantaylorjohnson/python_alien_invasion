@@ -6,6 +6,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
 
@@ -29,6 +30,11 @@ class AlienInvasion:
 
         # Creates the group of bullets with class Bullet() aka a sprite
         self.bullets = pygame.sprite.Group()
+
+        # Creates the group of aliens with class Alien() aka sprite
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
 
     def run_game(self):
 
@@ -107,6 +113,33 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _create_fleet(self):
+
+        """ Create the fleet of aliens. """
+        # Create an alien and find the number of aliens in a row.
+        # Spacing between each alien is equal to one alien width.
+
+        alien = Alien(self)
+        alien_width = alien.rect.width
+
+        available_space_x = self.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+        print(number_aliens_x)
+
+        # Create the first row of aliens
+        for alien_number in range(number_aliens_x):
+            self._create_alien(alien_number)
+
+    def _create_alien(self, alien_number):
+
+            # Create an alien and place it in the row.
+            alien = Alien(self)
+            alien_width = alien.rect.width
+            alien.x = alien_width + 2.1 * alien_width * alien_number
+            alien.rect.x = alien.x
+            self.aliens.add(alien)
+            print(alien_number)
+
     def _update_screen(self):
 
         """ Update images on the screen, and flip to the new screen. """
@@ -119,6 +152,9 @@ class AlienInvasion:
         # Render bullets group
         for bullet in self.bullets.sprites():
             bullet.draw_bullet() 
+
+        # Render aliens
+        self.aliens.draw(self.screen)
 
         # Make the most recently drawn screen visible.
         pygame.display.flip()
