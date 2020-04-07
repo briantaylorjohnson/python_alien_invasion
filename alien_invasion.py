@@ -50,6 +50,9 @@ class AlienInvasion:
             # Update bullets
             self._update_bullets()
 
+            # Update aliens
+            self._update_aliens()
+
             # Redraw the screen during each pass through the loop.
             self._update_screen()
 
@@ -146,6 +149,11 @@ class AlienInvasion:
             alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
             self.aliens.add(alien)
             print(alien_number)
+
+    def _update_aliens(self):
+
+        """ Update the positions of all aliens in the fleet. """
+        self.aliens.update()
 
     def _update_screen(self):
 
