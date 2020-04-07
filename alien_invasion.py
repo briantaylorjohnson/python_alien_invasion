@@ -1,3 +1,5 @@
+# Creates the game instance and maintains global instance variables (title, background color, screen size, Etc.)
+
 import sys
 
 import pygame
