@@ -178,6 +178,10 @@ class AlienInvasion:
             self._create_fleet()
             self.settings.increase_speed()
 
+            # Increase level.
+            self.stats.level += 1
+            self.sb.prep_level()
+
     def _create_fleet(self):
 
         """ Create the fleet of aliens. """
