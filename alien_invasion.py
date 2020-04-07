@@ -1,8 +1,10 @@
 # Creates the game instance and maintains global instance variables (title, background color, screen size, Etc.)
 
 import sys
-
 import pygame
+
+from settings import Settings
+from ship import Ship
 
 class AlienInvasion:
 
@@ -11,31 +13,68 @@ class AlienInvasion:
         """ Initialize the game, and create game resources. """
 
         pygame.init()
+        self.settings = Settings()
 
         # Set the resolution/window size for the game
-        self.screen = pygame.display.set_mode((1200, 800))
+        self.screen = pygame.display.set_mode(
+            (self.settings.screen_width, self.settings.screen_height))
 
         # Set the title for the game
         pygame.display.set_caption('Alien Invasion')
 
-        # Set the background color for the game surface
-        self.bg_color = (0, 0, 0)
+        # Creates an instance of the Ship() class for the ship on the screen
+        self.ship = Ship(self)
 
     def run_game(self):
 
         """ Start the main loop for the game. """
         while True:
-            # Watch keyboard and mouse events.
 
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            # Watch for keyboard and mouse events.
+            self._check_events()
 
-            # Redraw the screen during each pass through the loop
-            self.screen.fill(self.bg_color)
+            # Update ship
+            self.ship.update()
 
-            # Make the most recently drawn screen visible.
-            pygame.display.flip()
+            # Redraw the screen during each pass through the loop.
+            self._update_screen()
+
+    def _check_events(self):
+
+        """ Respon to key presses and mouse events. """
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    # Move the ship to the right
+                    self.ship.moving_right = True
+
+                elif event.key == pygame.K_LEFT:
+                    # Move the ship to the left
+                    self.ship.moving_left = True
+
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_RIGHT:
+                    # Move the ship to the right
+                    self.ship.moving_right = False
+
+                elif event.key == pygame.K_LEFT:
+                    # Move the ship to the left
+                    self.ship.moving_left = False
+
+    def _update_screen(self):
+
+        """ Update images on the screen, and flip to the new screen. """
+        # Render background color
+        self.screen.fill(self.settings.bg_color)
+
+        # Render ship
+        self.ship.blitme()
+
+        # Make the most recently drawn screen visible.
+        pygame.display.flip()
+
 
 if __name__ == '__main__':
 
